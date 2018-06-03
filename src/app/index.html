@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+  </head>
+  <body>
+    <div>FOO</div>
+    <script>
+      google.script.run
+        .withSuccessHandler(str=>console.log(str))
+        .withFailureHandler(err=>console.error(err))
+        .foo()
+    </script>
+  </body>
+</html>
