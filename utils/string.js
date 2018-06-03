@@ -1,1 +1,1 @@
-var world = "世界";
+var world = '世界';
