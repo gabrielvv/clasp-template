@@ -3,8 +3,13 @@
 module.exports = function(grunt) {
   require('load-grunt-tasks')(grunt);
 
+  // grunt.registerTask('default', ['test']);
+  // grunt.registerTask('test', ['jshint', 'karma:unit']);
+  // grunt.registerTask('dist', ['surround:main', 'uglify', 'surround:banner' ]);
+
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
+    claspOptions: grunt.file.readJSON('./app/.clasp.json'),
     meta: {
       banner: [
         '/**',
@@ -18,24 +23,38 @@ module.exports = function(grunt) {
     },
     jshint: {
       src: {
-        files: { src: ['./**/*.js'] },
+        files: { src: ['app/**/*.js'] },
         options: { jshintrc: '.jshintrc' }
       }
     },
+    open: {
+      dev: {
+        path:
+          'https://script.google.com/macros/s/<%= claspOptions.devId %>/dev',
+        app: 'firefox'
+      },
+      prod: {
+        url:
+          'https://script.google.com/macros/s/<%= claspOptions.execId %>/exec',
+        app: 'firefox'
+      }
+    },
     uglify: {
+      options: {
+        mangle: true,
+        compress: true
+      },
       build: {
-        expand: true,
-        cwd: 'dist',
-        src: ['*.js', '!*.min.js'],
-        ext: '.min.js',
-        dest: 'dist'
+        files: {
+          'dist/output.min.js': ['app/**/*.js', '!*.min.js']
+        }
       }
     },
     surround: {
       main: {
         expand: true,
-        cwd: 'src',
-        src: ['*.js'],
+        cwd: 'app',
+        src: ['gs/**/*.js'],
         dest: 'dist',
         options: {
           prepend: ['(function(global, modulazer) {', "'use strict';"].join(
